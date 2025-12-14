@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
   res.send('Planning Poker Server is running');
 });
 
-const PORT = 3000; // Hardcoded port 3000 as per common practice
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
