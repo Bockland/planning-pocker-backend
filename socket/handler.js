@@ -116,6 +116,24 @@ module.exports = (io, socket) => {
     }
   });
 
+  // Reaction
+  socket.on('send_reaction', async ({ roomId, targetUserId, reaction }) => {
+      try {
+        const room = await Room.findOne({ roomId });
+        if (!room) return;
+
+        // Find sender
+        const sender = room.participants.find(p => p.socketId === socket.id);
+        const fromUserId = sender ? sender.userId : null;
+
+        if (fromUserId) {
+            io.to(roomId).emit('reaction_received', { fromUserId, targetUserId, reaction });
+        }
+      } catch (err) {
+          console.error('Error sending reaction:', err);
+      }
+  });
+
   socket.on('disconnect', async () => {
     console.log('User disconnected:', socket.id);
   });
